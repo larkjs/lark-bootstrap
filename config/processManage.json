@@ -1,0 +1,10 @@
+{
+    "enable"    : true,
+    "instances" : "max",
+    "outputLog" : "logs/node.log",
+    "errorLog"  : "logs/node.log",
+    "larkArgPrefix" : "--lark-",
+    "watch"     : false,
+    "ignoreWatch" : [],
+    "reservedIgnoreWatch" : ["logs","status","data",".*\\.swp"]
+}
