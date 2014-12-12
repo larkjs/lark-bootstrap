@@ -1,5 +1,5 @@
 var koa   = require('koa');
-var init  = require('lark-koa-init');
+var init  = require('../..');
 
 var app = koa();
 
