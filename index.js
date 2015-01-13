@@ -18,7 +18,9 @@ var bootstrap = module.exports = function(app, config){
 
     config = config || {};
     configure(app, config);
-    processManager(app, config.processManage);
+    var pm = processManager(app, config.processManage);
+    exports.isMaster = pm.isMaster;
+    exports.isWorker = pm.isWorker;
 
     var queue = [];
 
