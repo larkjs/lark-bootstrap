@@ -7,6 +7,7 @@ var async = require('async');
 /**
  * Private module dependencies
  **/
+var arg             = require('./lib/arg');
 var configure       = require('./lib/configure');
 var processManager  = require('./lib/processManager');
 
@@ -17,6 +18,7 @@ var bootstrap = module.exports = function(app, config){
     if(typeof app != 'object') throw new Error('App must be an object');
 
     config = config || {};
+    arg.init(config.arg);
     configure(app, config);
     var pm = processManager(app, config.processManage);
     exports.isMaster = pm.isMaster;
@@ -25,7 +27,6 @@ var bootstrap = module.exports = function(app, config){
     var queue = [];
 
     queue = before.concat(queue);
-
 
     queue = queue.concat(after);
 
