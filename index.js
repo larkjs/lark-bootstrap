@@ -18,6 +18,13 @@ var bootstrap = module.exports = function(app, config){
     if(typeof app != 'object') throw new Error('App must be an object');
 
     config = config || {};
+
+    initProcess(app, config);
+
+    return initOnRequest(app, config);
+}
+
+function initProcess(app, config){
     arg.init(config.arg);
     configure(app, config);
     var pm = processManager(app, config.processManage);
@@ -33,8 +40,9 @@ var bootstrap = module.exports = function(app, config){
     async.waterfall(queue, function(err){
         if(err) throw err;
     });
+}
 
-
+function initOnRequest(app, config){
     middlewares.push(function*(next){
         yield next;
     });
@@ -53,16 +61,19 @@ var before = [];
 bootstrap.before = function(handler){
     if(typeof handler != 'function') throw new Error('Handler must be a function');
     before.unshift(handler);
+    return bootstrap;
 };
 
 var after  = [];
 bootstrap.after  = function(handler){
     if(typeof handler != 'function') throw new Error('Handler must be a function');
     after.push(handler);
+    return bootstrap;
 };
 
 var middlewares = [];
 bootstrap.middleware = function(handler){
     if(typeof handler != 'function') throw new Error('Handler must be a function');
     middlewares.push(handler);
+    return bootstrap;
 }
