@@ -19,17 +19,23 @@ var bootstrap = module.exports = function(app, config){
 
     config = config || {};
 
-    initProcess(app, config);
+    var res = initProcess(app, config);
 
-    return initOnRequest(app, config);
+    var ret = initOnRequest(app, config);
+
+    for(var i in res){
+        ret[i] = res[i];
+    }
+    return ret;
 }
 
 function initProcess(app, config){
+    var res = {};
     arg.init(config.arg);
     configure(app, config);
     var pm = processManager(app, config.processManage);
-    exports.isMaster = pm.isMaster;
-    exports.isWorker = pm.isWorker;
+    res.isMaster = pm.isMaster;
+    res.isWorker = pm.isWorker;
 
     var queue = [];
 
@@ -40,6 +46,8 @@ function initProcess(app, config){
     async.waterfall(queue, function(err){
         if(err) throw err;
     });
+
+    return res;
 }
 
 function initOnRequest(app, config){
