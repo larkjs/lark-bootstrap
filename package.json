@@ -1,6 +1,6 @@
 {
   "name": "lark-bootstrap",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "bootstrap lark by pm2",
   "main": "index.js",
   "directories": {
