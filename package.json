@@ -1,6 +1,6 @@
 {
   "name": "lark-bootstrap",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "bootstrap lark by pm2",
   "main": "index.js",
   "directories": {
@@ -20,7 +20,7 @@
   "dependencies" : {
     "async"  : "~0.9.0",
     "extend" : "~2.0.0",
-    "pm2"    : "~0.14.7"
+    "pm2"    : "~0.14.3"
   },
   "author": "lark-team",
   "license": "MIT",
