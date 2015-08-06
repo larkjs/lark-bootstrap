@@ -33,7 +33,7 @@ function initProcess(app, config){
     var res = {};
     arg.init(config.arg);
     configure(app, config);
-    var pm = processManager(app, config.processManage);
+    var pm = processManager(app, config.processManage, bootstrap);
     res.isMaster = pm.isMaster;
     res.isWorker = pm.isWorker;
 
@@ -51,17 +51,20 @@ function initProcess(app, config){
 }
 
 function initOnRequest(app, config){
+    var ret = {};
     middlewares.push(function*(next){
         yield next;
     });
 
-    return function*(next){
+    ret.middleware = function*(next){
         for(var index = 0; index < middlewares.length; index++){
             var middleware = middlewares[index];
             yield middleware.call(this, next);
         }
         yield next;
     }
+
+    return ret;
 }
 
 //hooks
