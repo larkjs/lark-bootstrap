@@ -7,5 +7,5 @@
     "larkArgPrefix" : "--lark-",
     "watch"     : false,
     "ignoreWatch" : [],
-    "reservedIgnoreWatch" : ["logs","status","data",".*\\.swp"]
+    "reservedIgnoreWatch" : ["logs",".pm2","status","data",".*\\.swp"]
 }
