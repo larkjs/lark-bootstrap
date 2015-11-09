@@ -1,90 +1,48 @@
-'use strict';
 /**
- * Public module dependencies
+ * Lark Bootstrap
+ * Initialize an nodejs app / Koa app / Lark app
  **/
-var async = require('async');
 
-/**
- * Private module dependencies
- **/
-var arg             = require('./lib/arg');
-var configure       = require('./lib/configure');
-var processManager  = require('./lib/processManager');
+import extend         from 'extend';
+import pm             from './lib/pm';
+import DEFAULT_CONFIG from './config/default.json';
 
 /**
- * Bootstrap
+ * class Bootstrap
  **/
-var bootstrap = module.exports = function(app, config){
-    if(typeof app != 'object') throw new Error('App must be an object');
-
-    config = config || {};
-
-    var res = initProcess(app, config);
-
-    var ret = initOnRequest(app, config);
-
-    for(var i in res){
-        ret[i] = res[i];
+class Bootstrap {
+    constructor (app, config) {
+        this.app = app;
+        this.config = extend(true, config || {}, DEFAULT_CONFIG);
+        this.hooks = [];
     }
-    return ret;
-}
-
-function initProcess(app, config){
-    var res = {};
-    arg.init(config.arg);
-    configure(app, config);
-    var pm = processManager(app, config.processManage, bootstrap);
-    res.isMaster = pm.isMaster;
-    res.isWorker = pm.isWorker;
-
-    var queue = [];
-
-    queue = before.concat(queue);
-
-    queue = queue.concat(after);
-
-    async.waterfall(queue, function(err){
-        if(err) throw err;
-    });
-
-    return res;
-}
-
-function initOnRequest(app, config){
-    var ret = {};
-    middlewares.push(function*(next){
-        yield next;
-    });
-
-    ret.middleware = function*(next){
-        for(var index = 0; index < middlewares.length; index++){
-            var middleware = middlewares[index];
-            yield middleware.call(this, next);
+    async start (cb) {
+        let result = pm(this.config.pm);
+        if (result.isMaster) {
+            return result;
         }
-        yield next;
+        const ctx = {
+            bootstrap: this,
+            app: this.app,
+            config: extend(true, {}, this.config),
+            pm : extend(true, {}, result),
+        };
+        for (let i = 0; i < this.hooks.length; i++) {
+            let fn = this.hooks[i];
+            await fn(ctx);
+        }
+        if (cb instanceof Function) {
+            result.result = await cb(ctx);
+        }
+        return result;
     }
-
-    return ret;
+    use (fn) {
+        if (!(fn instanceof Function)) {
+            throw new Error('Param for Bootstrap.use must be a Function!');
+        }
+        this.hooks.push(fn);
+        return this;
+    }
 }
 
-//hooks
-var before = [];
-bootstrap.before = function(handler){
-    if(typeof handler != 'function') throw new Error('Handler must be a function');
-    before.unshift(handler);
-    return bootstrap;
-};
-
-var after  = [];
-bootstrap.after  = function(handler){
-    if(typeof handler != 'function') throw new Error('Handler must be a function');
-    after.push(handler);
-    return bootstrap;
-};
-
-var middlewares = [];
-bootstrap.middleware = function(handler){
-    if(typeof handler != 'function') throw new Error('Handler must be a function');
-    middlewares.push(handler);
-    return bootstrap;
-}
+export default Bootstrap;
