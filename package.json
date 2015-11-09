@@ -4,6 +4,9 @@
   "version-node-v5": "0.2.5",
   "description": "bootstrap by pm2",
   "main": "index.js",
+  "engines": {
+    "node": ">= 4.0.0"
+  },
   "directories": {
     "example": "examples"
   },
