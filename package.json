@@ -1,7 +1,8 @@
 {
   "name": "lark-bootstrap",
-  "version": "0.2.5",
-  "description": "bootstrap lark by pm2",
+  "version": "1.0.0-dev-0.0",
+  "version-node-v5": "0.2.5",
+  "description": "bootstrap by pm2",
   "main": "index.js",
   "directories": {
     "example": "examples"
@@ -17,15 +18,19 @@
     "bootstrap",
     "lark"
   ],
-  "dependencies" : {
-    "async"  : "~0.9.0",
-    "extend" : "~2.0.0",
-    "pm2"    : "~0.14.3"
+  "dependencies": {
+    "async": "~0.9.0",
+    "extend": "~2.0.0",
+    "pm2": "~0.14.3"
   },
   "author": "lark-team",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/larkjs/lark-bootstrap/issues"
   },
-  "homepage": "https://github.com/larkjs/lark-bootstrap"
+  "homepage": "https://github.com/larkjs/lark-bootstrap",
+  "devDependencies": {
+    "babel-cli": "^6.1.2",
+    "babel-plugin-transform-async-to-generator": "^6.0.14"
+  }
 }
