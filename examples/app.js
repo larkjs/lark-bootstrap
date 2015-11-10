@@ -5,23 +5,26 @@
  * `node app --lark-watch` to watch
  **/
 import http       from 'http';
+import _debug     from 'debug';
 import bootstrap  from '..';
 
-console.log('creating app');
+const debug = _debug('lark-bootstrap');
+
+debug('creating a new http app');
 const app = http.createServer((req, res) => {
     console.log(req.method + ' ' + req.url);
     res.write("OK");
     res.end();
 });
 
-console.log('adding hook');
+debug('adding a hook on bootstrap, showing worker message');
 bootstrap.use(async (ctx) => {
     console.log("Worker " + process.pid + " started!");
 });
 
-console.log('starting');
+debug('starting bootstrap');
 let result = bootstrap.start(() => {
-    console.log('started!');
+    debug('bootstrap started!');
     return app.listen(3000, () => {
         console.log("App listening on 3000");
     });

@@ -4,8 +4,11 @@
  **/
 
 import extend         from 'extend';
+import _debug         from 'debug';
 import pm             from './lib/pm';
 import DEFAULT_CONFIG from './config/default.json';
+
+const debug = _debug('lark-bootstrap');
 
 const bootstrap = {
     config: {},
@@ -62,3 +65,5 @@ bootstrap.use = (fn) => {
 };
 
 export default bootstrap;
+
+debug('load index.js ok!');
