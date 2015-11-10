@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Example & Test file, bootstrap app
  * `node app` to start
@@ -10,22 +12,22 @@ import bootstrap  from '..';
 
 const debug = _debug('lark-bootstrap');
 
-debug('creating a new http app');
+debug('Example: create new http app');
 const app = http.createServer((req, res) => {
     console.log(req.method + ' ' + req.url);
     res.write("OK");
     res.end();
 });
 
-debug('adding a hook on bootstrap, showing worker message');
+debug('Example: use middleware to show worker info');
 bootstrap.use(async (ctx) => {
-    console.log("Worker " + process.pid + " started!");
+    debug("Example: worker " + process.pid + " started");
 });
 
-debug('starting bootstrap');
+debug('Example: start bootstrap');
 let result = bootstrap.start(() => {
-    debug('bootstrap started!');
+    debug('Example: bootstrap started');
     return app.listen(3000, () => {
-        console.log("App listening on 3000");
+        debug('Example: app listening on 3000');
     });
 });

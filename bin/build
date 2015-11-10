@@ -52,6 +52,7 @@ pkg = removeBabel(pkg);
 console.log("Starting to build ...");
 exec(appPath + '/node_modules/.bin/babel --ignore node_modules ' + appPath + ' -d ' + toPath);
 exec("cp -r " + appPath + '/config ' + toPath + '/config');
+exec("mkdir -p " + toPath + "/logs");
 exec("cp -r " + appPath + '/bin ' + toPath + '/');
 exec("rm " + toPath + "/bin/build");
 fs.writeFileSync(toPath + '/package.json', JSON.stringify(pkg, null, 4));

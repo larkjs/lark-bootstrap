@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Lark Bootstrap
  * Initialize an nodejs app / Koa app / Lark app
@@ -23,6 +25,7 @@ bootstrap.configure = (config) => {
     if (configured) {
         return bootstrap;
     }
+    debug('Bootstrap: configure');
     configured = true;
     config = extend(true, {}, config);
     bootstrap.config = extend(true, config, DEFAULT_CONFIG);
@@ -33,6 +36,7 @@ bootstrap.configure = (config) => {
  * Bootstrap current service
  **/
 bootstrap.start = async (cb) => {
+    debug('Bootstrap: start');
     bootstrap.configure();
     let state = await pm(bootstrap.config.pm);
     if (state.isMaster) {
@@ -57,6 +61,7 @@ bootstrap.start = async (cb) => {
  * Add hooks before booting
  **/
 bootstrap.use = (fn) => {
+    debug('Bootstrap: use');
     if (!(fn instanceof Function)) {
         throw new Error('Param for Bootstrap.use must be a Function!');
     }
@@ -66,4 +71,4 @@ bootstrap.use = (fn) => {
 
 export default bootstrap;
 
-debug('load index.js ok!');
+debug('Bootstrap: script loaded');
