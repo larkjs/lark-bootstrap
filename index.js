@@ -35,12 +35,12 @@ bootstrap.configure = (config) => {
 /**
  * Bootstrap current service
  **/
-bootstrap.start = async (cb) => {
+bootstrap.start = async () => {
     debug('Bootstrap: start');
     bootstrap.configure();
     let state = await pm(bootstrap.config.pm);
     if (state.isMaster) {
-        return result;
+        process.exit(0);
     }
     const ctx = {
         bootstrap: bootstrap,
@@ -51,10 +51,26 @@ bootstrap.start = async (cb) => {
         let fn = bootstrap.hooks[i];
         await fn(ctx);
     }
-    if (cb instanceof Function) {
-        state.result = cb(ctx);
+};
+
+/**
+ * Bootstrap start with callback
+ **/
+bootstrap.start_cb = (cb) => {
+    debug('Bootstrap: start in callback mode');
+    if (!(cb instanceof Function)) {
+        debug('Bootstrap: callback function is not defined!');
+        cb = () => {};
     }
-    return state;
+    (async () => {
+        try {
+            await bootstrap.start();
+        }
+        catch (e) {
+            return cb(e);
+        }
+        return cb();
+    })();
 };
 
 /**
