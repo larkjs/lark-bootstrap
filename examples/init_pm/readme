@@ -1,7 +1,0 @@
-execute "node --harmony app.js" to start app.js
-execute "node --harmony app.js --lark-delete" to stop app.js
-execute "node --harmony app.js --lark-watch"  to enable watch module
-
-
-PM2 will make app.js running in multi-process mode.
-You can also use pm2 to control the processes directly

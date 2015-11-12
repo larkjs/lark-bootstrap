@@ -1,90 +1,95 @@
 'use strict';
-/**
- * Public module dependencies
- **/
-var async = require('async');
 
 /**
- * Private module dependencies
+ * Lark Bootstrap
+ * Initialize an nodejs app / Koa app / Lark app
  **/
-var arg             = require('./lib/arg');
-var configure       = require('./lib/configure');
-var processManager  = require('./lib/processManager');
+
+import extend         from 'extend';
+import _debug         from 'debug';
+import pm             from './lib/pm';
+import DEFAULT_CONFIG from './config/default.json';
+
+const debug = _debug('lark-bootstrap');
+
+const bootstrap = {
+    config: DEFAULT_CONFIG,
+    hooks: [],
+};
 
 /**
- * Bootstrap
+ * Configure
  **/
-var bootstrap = module.exports = function(app, config){
-    if(typeof app != 'object') throw new Error('App must be an object');
-
-    config = config || {};
-
-    var res = initProcess(app, config);
-
-    var ret = initOnRequest(app, config);
-
-    for(var i in res){
-        ret[i] = res[i];
+let started = false;
+bootstrap.configure = (config) => {
+    if (started) {
+        throw new Error("Can not configure after bootstrap started!");
     }
-    return ret;
-}
+    debug('Bootstrap: configure');
+    config = extend(true, {}, config);
+    bootstrap.config = extend(true, bootstrap.config, config);
+    return bootstrap;
+};
 
-function initProcess(app, config){
-    var res = {};
-    arg.init(config.arg);
-    configure(app, config);
-    var pm = processManager(app, config.processManage, bootstrap);
-    res.isMaster = pm.isMaster;
-    res.isWorker = pm.isWorker;
+/**
+ * Bootstrap current service
+ **/
+bootstrap.start = async () => {
+    debug('Bootstrap: start');
+    bootstrap.configure();
+    started = true;
+    let state;
+    if (bootstrap.config.pm && bootstrap.config.pm.enable !== false) {
+        state = await pm(bootstrap.config.pm);
+    }
+    if (state.isMaster) {
+        process.exit(0);
+    }
+    const ctx = {
+        bootstrap: bootstrap,
+        config: extend(true, {}, bootstrap.config),
+    };
+    if (state) {
+        ctx.state = extend(true, {}, state);
+    }
+    for (let i = 0; i < bootstrap.hooks.length; i++) {
+        let fn = bootstrap.hooks[i];
+        await fn(ctx);
+    }
+};
 
-    var queue = [];
-
-    queue = before.concat(queue);
-
-    queue = queue.concat(after);
-
-    async.waterfall(queue, function(err){
-        if(err) throw err;
-    });
-
-    return res;
-}
-
-function initOnRequest(app, config){
-    var ret = {};
-    middlewares.push(function*(next){
-        yield next;
-    });
-
-    ret.middleware = function*(next){
-        for(var index = 0; index < middlewares.length; index++){
-            var middleware = middlewares[index];
-            yield middleware.call(this, next);
+/**
+ * Bootstrap start with callback
+ **/
+bootstrap.start_cb = (cb) => {
+    debug('Bootstrap: start in callback mode');
+    if (!(cb instanceof Function)) {
+        debug('Bootstrap: callback function is not defined!');
+        cb = () => {};
+    }
+    (async () => {
+        try {
+            await bootstrap.start();
         }
-        yield next;
+        catch (e) {
+            return cb(e);
+        }
+        return cb();
+    })();
+};
+
+/**
+ * Add hooks before booting
+ **/
+bootstrap.use = (fn) => {
+    debug('Bootstrap: use');
+    if (!(fn instanceof Function)) {
+        throw new Error('Param for Bootstrap.use must be a Function!');
     }
-
-    return ret;
-}
-
-//hooks
-var before = [];
-bootstrap.before = function(handler){
-    if(typeof handler != 'function') throw new Error('Handler must be a function');
-    before.unshift(handler);
+    bootstrap.hooks.push(fn);
     return bootstrap;
 };
 
-var after  = [];
-bootstrap.after  = function(handler){
-    if(typeof handler != 'function') throw new Error('Handler must be a function');
-    after.push(handler);
-    return bootstrap;
-};
+export default bootstrap;
 
-var middlewares = [];
-bootstrap.middleware = function(handler){
-    if(typeof handler != 'function') throw new Error('Handler must be a function');
-    middlewares.push(handler);
-    return bootstrap;
-}
+debug('Bootstrap: script loaded');
