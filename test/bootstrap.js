@@ -27,6 +27,13 @@ debug('Test: starting test lark-bootstrap');
 
 process.env.PM2_HOME = path.dirname(__dirname);
 debug('Test: set PM2 HOME to ' + process.env.PM2_HOME);
+process.on('exit', () => {
+    if (process.env.PM2_HOME.match(/\.pm2\/?$/)) {
+        debug('Test: removing .pm2 to clean');
+        cp.execSync('rm -rf ' + process.env.PM2_HOME);
+    }
+});
+
 const bootstrap = require('..').default;
 
 describe('bootstrap', () => {
