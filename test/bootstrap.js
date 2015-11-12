@@ -226,7 +226,18 @@ describe('bootstrap.start', function () {
     });
 
     it('should kill PM2 if killing an app', done => {
-        done();
+        checkPm2((cb) => {
+            debug('Testing: killing PM2 to prepare for test');
+            cp.execSync('./pm2.sh kill');
+            debug('Testing: starting app.js for test delete');
+            cp.execSync('node examples/app.js');
+            cp.exec('node examples/app.js --lark-kill', (err, stdout, stderr) => {
+                debug('Testing: app.js stopped!');
+                stdout.should.be.an.instanceOf(String);
+                stdout.should.be.exactly('');
+                cb(done);
+            });
+        });
     });
 });
 
