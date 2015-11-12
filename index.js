@@ -13,22 +13,21 @@ import DEFAULT_CONFIG from './config/default.json';
 const debug = _debug('lark-bootstrap');
 
 const bootstrap = {
-    config: {},
+    config: DEFAULT_CONFIG,
     hooks: [],
 };
 
 /**
  * Configure
  **/
-let configured = false;
+let started = false;
 bootstrap.configure = (config) => {
-    if (configured) {
-        return bootstrap;
+    if (started) {
+        throw new Error("Can not configure after bootstrap started!");
     }
     debug('Bootstrap: configure');
-    configured = true;
     config = extend(true, {}, config);
-    bootstrap.config = extend(true, config, DEFAULT_CONFIG);
+    bootstrap.config = extend(true, bootstrap.config, config);
     return bootstrap;
 };
 
@@ -38,15 +37,21 @@ bootstrap.configure = (config) => {
 bootstrap.start = async () => {
     debug('Bootstrap: start');
     bootstrap.configure();
-    let state = await pm(bootstrap.config.pm);
+    started = true;
+    let state;
+    if (bootstrap.config.pm && bootstrap.config.pm.enable !== false) {
+        state = await pm(bootstrap.config.pm);
+    }
     if (state.isMaster) {
         process.exit(0);
     }
     const ctx = {
         bootstrap: bootstrap,
         config: extend(true, {}, bootstrap.config),
-        state : extend(true, {}, state),
     };
+    if (state) {
+        ctx.state = extend(true, {}, state);
+    }
     for (let i = 0; i < bootstrap.hooks.length; i++) {
         let fn = bootstrap.hooks[i];
         await fn(ctx);
