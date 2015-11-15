@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 'use strict'
 
-const NAME  = 'lark-bootstrap';
+let pkg    = require('../package.json');
+const NAME  = pkg.name
+const NOT_BUILD = ['node_modules', 'package.json'];
+
+if ('string' !== typeof NAME || NAME.match(/^nodev5\./)) {
+    console.log("Project name must not start with nodev5.");
+}
 
 const path  = require('path');
 const fs    = require('fs');
@@ -20,7 +26,6 @@ if (-1 === index) {
 appPath = appPath.slice(0, index + 1).join('/');
 
 let toPath = appPath + '/../nodev5.' + NAME;
-let pkg    = require(appPath + '/package.json');
 pkg.version = pkg['version-node-v5'];
 delete pkg['version-node-v5'];
 
@@ -50,10 +55,11 @@ function removeBabel (obj) {
 pkg = removeBabel(pkg);
 
 console.log("Starting to build ...");
+fs.readdirSync(appPath).forEach((fileName) => {
+    if (fileName[0] === '.' || NOT_BUILD.indexOf(fileName) >= 0) return;
+    exec("cp -r " + appPath + '/' + fileName + ' ' + toPath + '/');
+});
 exec(appPath + '/node_modules/.bin/babel --ignore node_modules ' + appPath + ' -d ' + toPath);
-exec("cp -r " + appPath + '/config ' + toPath + '/config');
-exec("mkdir -p " + toPath + "/logs");
-exec("cp -r " + appPath + '/bin ' + toPath + '/');
 exec("rm " + toPath + "/bin/build");
 fs.writeFileSync(toPath + '/package.json', JSON.stringify(pkg, null, 4));
 console.log("Done!");
