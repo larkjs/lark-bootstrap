@@ -55,6 +55,7 @@ function removeBabel (obj) {
 pkg = removeBabel(pkg);
 
 console.log("Starting to build ...");
+exec("mkdir -p " + toPath);
 fs.readdirSync(appPath).forEach((fileName) => {
     if (fileName[0] === '.' || NOT_BUILD.indexOf(fileName) >= 0) return;
     exec("cp -r " + appPath + '/' + fileName + ' ' + toPath + '/');
