@@ -132,7 +132,7 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: starting app.js');
-        cp.exec('node examples/app.js', (err, stdout, stderr) => {
+        cp.exec('node --harmony examples/app.js', (err, stdout, stderr) => {
             debug('Testing: app.js started!');
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Start OK\n');
@@ -146,9 +146,9 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test restart');
-        cp.execSync('node examples/app.js');
+        cp.execSync('node --harmony examples/app.js');
         debug('Testing: restarting app.js');
-        cp.exec('node examples/app.js', (err, stdout, stderr) => {
+        cp.exec('node --harmony examples/app.js', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Restart OK\n');
@@ -162,9 +162,9 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test restart');
-        cp.execSync('node examples/app.js');
+        cp.execSync('node --harmony examples/app.js');
         debug('Testing: restarting app.js');
-        cp.exec('node examples/app.js --lark-restart', (err, stdout, stderr) => {
+        cp.exec('node --harmony examples/app.js --lark-restart', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Restart OK\n');
@@ -178,7 +178,7 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: restarting app.js');
-        cp.exec('node examples/app.js --lark-restart', (err, stdout, stderr) => {
+        cp.exec('node --harmony examples/app.js --lark-restart', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('Error : process name not found\n[Lark-PM2] Restart Fail!\n');
@@ -192,8 +192,8 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test stop');
-        cp.execSync('node examples/app.js');
-        cp.exec('node examples/app.js --lark-stop', (err, stdout, stderr) => {
+        cp.execSync('node --harmony examples/app.js');
+        cp.exec('node --harmony examples/app.js --lark-stop', (err, stdout, stderr) => {
             debug('Testing: app.js stopped!');
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Stop OK\n');
@@ -207,7 +207,7 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: stopping app.js');
-        cp.exec('node examples/app.js --lark-stop', (err, stdout, stderr) => {
+        cp.exec('node --harmony examples/app.js --lark-stop', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('Error : process name not found\n[Lark-PM2] Stop Fail!\n');
@@ -222,8 +222,8 @@ describe('bootstrap.start', function () {
             debug('Testing: killing PM2 to prepare for test');
             cp.execSync('./pm2.sh kill');
             debug('Testing: starting app.js for test delete');
-            cp.execSync('node examples/app.js');
-            cp.exec('node examples/app.js --lark-delete', (err, stdout, stderr) => {
+            cp.execSync('node --harmony examples/app.js');
+            cp.exec('node --harmony examples/app.js --lark-delete', (err, stdout, stderr) => {
                 debug('Testing: app.js stopped!');
                 stdout.should.be.an.instanceOf(String);
                 stdout.should.be.exactly('[Lark-PM2] Delete OK\n');
@@ -237,8 +237,8 @@ describe('bootstrap.start', function () {
             debug('Testing: killing PM2 to prepare for test');
             cp.execSync('./pm2.sh kill');
             debug('Testing: starting app.js for test delete');
-            cp.execSync('node examples/app.js');
-            cp.exec('node examples/app.js --lark-kill', (err, stdout, stderr) => {
+            cp.execSync('node --harmony examples/app.js');
+            cp.exec('node --harmony examples/app.js --lark-kill', (err, stdout, stderr) => {
                 debug('Testing: app.js stopped!');
                 stdout.should.be.an.instanceOf(String);
                 stdout.should.be.exactly('');

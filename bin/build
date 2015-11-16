@@ -1,12 +1,17 @@
 #!/usr/bin/env node
 'use strict'
 
+let syntax = 'nodev5';
+if (process.argv.indexOf('es5') >= 0) {
+    syntax = 'es5';
+}
+
 let pkg    = require('../package.json');
 const NAME  = pkg.name
 const NOT_BUILD = ['node_modules', 'package.json'];
 
-if ('string' !== typeof NAME || NAME.match(/^nodev5\./)) {
-    console.log("Project name must not start with nodev5.");
+if ('string' !== typeof NAME || NAME.match(new RegExp("^" + syntax + "\."))) {
+    console.log("Project name must not start with " + syntax + ".");
 }
 
 const path  = require('path');
@@ -25,7 +30,7 @@ if (-1 === index) {
 
 appPath = appPath.slice(0, index + 1).join('/');
 
-let toPath = appPath + '/../nodev5.' + NAME;
+let toPath = appPath + '/../' + syntax + '.' + NAME;
 
 function removeBabel (obj) {
     if (Array.isArray(obj)) {
@@ -52,13 +57,29 @@ function removeBabel (obj) {
 
 pkg = removeBabel(pkg);
 
-console.log("Starting to build ...");
+console.log("Starting to build " + syntax + " ...");
 exec("mkdir -p " + toPath);
 fs.readdirSync(appPath).forEach((fileName) => {
     if (fileName[0] === '.' || NOT_BUILD.indexOf(fileName) >= 0) return;
     exec("cp -r " + appPath + '/' + fileName + ' ' + toPath + '/');
 });
+exec('cp .babelrc_' + syntax + ' .babelrc');
 exec(appPath + '/node_modules/.bin/babel --ignore node_modules ' + appPath + ' -d ' + toPath);
 exec("rm " + toPath + "/bin/build");
+exec("rm " + appPath + "/.babelrc");
+if (pkg['version_' + syntax]) {
+    pkg.version = pkg['version_' + syntax];
+}
+if (pkg['dependencies_' + syntax]) {
+    pkg['dependencies'] = extend(true, pkg['dependencies'] || {}, pkg['dependencies_' + syntax]);
+}
+delete pkg['version_es5'];
+delete pkg['version_nodev5'];
+if (syntax === 'es5') {
+    pkg.engines = {
+        node: '>= 0.11.14',
+    }
+    pkg.scripts.test = "NODE_ENV=testing ./node_modules/.bin/mocha --harmony --require should test/";
+}
 fs.writeFileSync(toPath + '/package.json', JSON.stringify(pkg, null, 4));
 console.log("Done!");
