@@ -26,8 +26,6 @@ if (-1 === index) {
 appPath = appPath.slice(0, index + 1).join('/');
 
 let toPath = appPath + '/../nodev5.' + NAME;
-pkg.version = pkg['version-node-v5'];
-delete pkg['version-node-v5'];
 
 function removeBabel (obj) {
     if (Array.isArray(obj)) {
