@@ -1,7 +1,7 @@
 lark-bootstrap
 ==============
 
-[![NPM version][npm-image]][npm-url]
+[![NPM version][npm-image]][npm-url] [![Travis Build][build-image]][build-url]
 
 bootstrap lark by pm2
 
@@ -56,3 +56,5 @@ bootstrap.start_cb(function () {
 
 [npm-image]: https://img.shields.io/npm/v/lark-bootstrap.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/lark-bootstrap
+[build-image]: https://travis-ci.org/larkjs/lark-bootstrap.svg?branch=master
+[build-url]: https://travis-ci.org/larkjs/lark-bootstrap
