@@ -10,9 +10,7 @@
         "example": "examples"
     },
     "scripts": {
-        "_test": "NODE_ENV=testing ./node_modules/.bin/mocha --require should test/",
-        "test": "NODE_ENV=testing ./node_modules/.bin/mocha --harmony --require should test/",
-        "test_es5": "cd release/es5    && npm test"
+        "test": "NODE_ENV=testing ./node_modules/.bin/mocha --harmony --require should test/"
     },
     "repository": {
         "type": "git",

@@ -83,7 +83,6 @@ fs.readdirSync(appPath).forEach((fileName) => {
 });
 exec("rm -f " + toPath + "/bin/export " + toPath + "/bin/relase");
 exec("rm " + appPath + "/.babelrc");
-exec("cd " + toPath + " && ln -s ../../node_modules node_modules");
 pkg.main = 'index.js';
 if (pkg['version_' + syntax]) {
     pkg.version = pkg['version_' + syntax];
@@ -94,12 +93,12 @@ if (pkg['dependencies_' + syntax]) {
 delete pkg['version_es5'];
 delete pkg['version_nodev5'];
 let node_modules_path = './node_modules';
-/*
 if (process.argv.indexOf('release') >= 0) {
-    node_modules_path = '../../node_modules';
+    exec("cd " + toPath + " && rm -rf node_modules && ln -s ../../node_modules node_modules");
 }
-*/
 pkg.scripts.test = "NODE_ENV=testing " + node_modules_path + "/.bin/mocha --require should test/";
+delete pkg.scripts._test;
+delete pkg.scripts.test_es5;
 if (syntax === 'es5') {
     pkg.engines = {
         node: '>= 0.11.14',

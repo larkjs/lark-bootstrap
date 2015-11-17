@@ -127,13 +127,15 @@ describe('bootstrap.configure', () => {
 
 describe('bootstrap.start', function () {
     // starting and stopping pm2 would cost more than 2000ms
-    this.timeout(10000);
+    console.log('    please wait patiently, this test costs some time since it starts and stops PM2 several times');
+    this.timeout(60000);
     it('should start the app if starting an app', done => {
         debug('Testing: killing PM2 to prepare for test');
         cp.execSync('./pm2.sh kill');
         debug('Testing: starting app.js');
         cp.exec('node --harmony examples/app.js', (err, stdout, stderr) => {
             debug('Testing: app.js started!');
+            should(err).be.not.ok;
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Start OK\n');
             debug('Testing: killing PM2 to clean');
@@ -150,6 +152,7 @@ describe('bootstrap.start', function () {
         debug('Testing: restarting app.js');
         cp.exec('node --harmony examples/app.js', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
+            should(err).be.not.ok;
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Restart OK\n');
             debug('Testing: killing PM2 to clean');
@@ -166,6 +169,7 @@ describe('bootstrap.start', function () {
         debug('Testing: restarting app.js');
         cp.exec('node --harmony examples/app.js --lark-restart', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
+            should(err).be.not.ok;
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Restart OK\n');
             debug('Testing: killing PM2 to clean');
@@ -180,6 +184,7 @@ describe('bootstrap.start', function () {
         debug('Testing: restarting app.js');
         cp.exec('node --harmony examples/app.js --lark-restart', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
+            should(err).be.not.ok;
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('Error : process name not found\n[Lark-PM2] Restart Fail!\n');
             debug('Testing: killing PM2 to clean');
@@ -195,6 +200,7 @@ describe('bootstrap.start', function () {
         cp.execSync('node --harmony examples/app.js');
         cp.exec('node --harmony examples/app.js --lark-stop', (err, stdout, stderr) => {
             debug('Testing: app.js stopped!');
+            should(err).be.not.ok;
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('[Lark-PM2] Stop OK\n');
             debug('Testing: killing PM2 to clean');
@@ -209,6 +215,7 @@ describe('bootstrap.start', function () {
         debug('Testing: stopping app.js');
         cp.exec('node --harmony examples/app.js --lark-stop', (err, stdout, stderr) => {
             debug('Testing: app.js restarted!');
+            should(err).be.not.ok;
             stdout.should.be.an.instanceOf(String);
             stdout.should.be.exactly('Error : process name not found\n[Lark-PM2] Stop Fail!\n');
             debug('Testing: killing PM2 to clean');
@@ -225,6 +232,7 @@ describe('bootstrap.start', function () {
             cp.execSync('node --harmony examples/app.js');
             cp.exec('node --harmony examples/app.js --lark-delete', (err, stdout, stderr) => {
                 debug('Testing: app.js stopped!');
+                should(err).be.not.ok;
                 stdout.should.be.an.instanceOf(String);
                 stdout.should.be.exactly('[Lark-PM2] Delete OK\n');
                 cb(done);
@@ -240,6 +248,7 @@ describe('bootstrap.start', function () {
             cp.execSync('node --harmony examples/app.js');
             cp.exec('node --harmony examples/app.js --lark-kill', (err, stdout, stderr) => {
                 debug('Testing: app.js stopped!');
+                should(err).be.not.ok;
                 stdout.should.be.an.instanceOf(String);
                 stdout.should.be.exactly('');
                 cb(done);
