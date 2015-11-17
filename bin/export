@@ -96,7 +96,7 @@ let node_modules_path = './node_modules';
 if (process.argv.indexOf('release') >= 0) {
     exec("cd " + toPath + " && rm -rf node_modules && ln -s ../../node_modules node_modules");
 }
-pkg.scripts.test = "DEBUG=lark-bootstrap NODE_ENV=testing " + node_modules_path + "/.bin/mocha --require should test/";
+pkg.scripts.test = "NODE_ENV=testing " + node_modules_path + "/.bin/mocha --require should test/";
 delete pkg.scripts._test;
 delete pkg.scripts.test_es5;
 if (syntax === 'es5') {

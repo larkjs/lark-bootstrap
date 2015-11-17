@@ -133,6 +133,11 @@ describe('bootstrap.configure', function () {
 });
 
 describe('bootstrap.start', function () {
+    if (__dirname.split('/').indexOf('larkjs') >= 0) {
+        debug('Testing: under directory larkjs, means this test is executed under travis, abort testing start');
+        return;
+    }
+
     // starting and stopping pm2 would cost more than 2000ms
     console.log('    please wait patiently, this test costs some time since it starts and stops PM2 several times');
     this.timeout(60000);
