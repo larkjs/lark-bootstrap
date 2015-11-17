@@ -1,10 +1,8 @@
 {
   "name": "lark-bootstrap",
-  "version": "1.0.0",
-  "version_nodev5": "1.0.3",
-  "version_es5": "0.3.0",
+  "version": "1.0.4",
   "description": "bootstrap by PM2",
-  "main": "index.js",
+  "main": "loader.js",
   "engines": {
     "node": ">= 5.0.0"
   },
@@ -12,7 +10,9 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "NODE_ENV=testing ./node_modules/.bin/mocha --harmony --require should test/"
+    "_test":    "NODE_ENV=testing ./node_modules/.bin/mocha --require should test/",
+    "test":     "cd release/nodev5 && npm test",
+    "test_es5": "cd release/es5    && npm test"
   },
   "repository": {
     "type": "git",
