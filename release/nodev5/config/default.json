@@ -1,0 +1,14 @@
+{
+    "pm": {
+        "enable"    : true,
+        "instances" : "max",
+        "outputLog" : "logs/node.log",
+        "errorLog"  : null,
+        "mergeLogs" : true,
+        "larkArgPrefix" : "--lark-",
+        "watch"     : false,
+        "exec_mode" : "cluster",
+        "ignoreWatch" : [],
+        "reservedIgnoreWatch" : ["logs",".pm2","status","data",".*\\.swp"]
+    }
+}
