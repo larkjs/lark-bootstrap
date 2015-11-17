@@ -11,7 +11,7 @@
   },
   "scripts": {
     "_test":    "NODE_ENV=testing ./node_modules/.bin/mocha --require should test/",
-    "test":     "cd release/nodev5 && rm -rf node_modules && ln -s ../../node_modules node_modules && npm test",
+    "test":     "DEBUG=lark-bootstrap cd release/nodev5 && rm -rf node_modules && ln -s ../../node_modules node_modules && npm test",
     "test_es5": "cd release/es5    && rm -rf node_modules && ln -s ../../node_modules node_modules && npm test"
   },
   "repository": {
