@@ -140,15 +140,13 @@ describe('bootstrap.start', function () {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js');
-        _child_process2.default.exec('node --harmony examples/app.js', function (err, stdout, stderr) {
-            debug('Testing: app.js started!');
-            (0, _should2.default)(err).be.not.ok;
-            stdout.should.be.an.instanceOf(String);
-            stdout.should.be.exactly('[Lark-PM2] Start OK\n');
-            debug('Testing: killing PM2 to clean');
-            _child_process2.default.execSync('./pm2.sh kill');
-            done();
-        });
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js');
+        debug('Testing: app.js started!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('[Lark-PM2] Start OK\n');
+        debug('Testing: killing PM2 to clean');
+        _child_process2.default.execSync('./pm2.sh kill');
+        done();
     });
 
     it('should restart if starting an existing app', function (done) {
@@ -157,15 +155,13 @@ describe('bootstrap.start', function () {
         debug('Testing: starting app.js for test restart');
         _child_process2.default.execSync('node --harmony examples/app.js');
         debug('Testing: restarting app.js');
-        _child_process2.default.exec('node --harmony examples/app.js', function (err, stdout, stderr) {
-            debug('Testing: app.js restarted!');
-            (0, _should2.default)(err).be.not.ok;
-            stdout.should.be.an.instanceOf(String);
-            stdout.should.be.exactly('[Lark-PM2] Restart OK\n');
-            debug('Testing: killing PM2 to clean');
-            _child_process2.default.execSync('./pm2.sh kill');
-            done();
-        });
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js');
+        debug('Testing: app.js restarted!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('[Lark-PM2] Restart OK\n');
+        debug('Testing: killing PM2 to clean');
+        _child_process2.default.execSync('./pm2.sh kill');
+        done();
     });
 
     it('should restart if restarting an existing app', function (done) {
@@ -174,30 +170,26 @@ describe('bootstrap.start', function () {
         debug('Testing: starting app.js for test restart');
         _child_process2.default.execSync('node --harmony examples/app.js');
         debug('Testing: restarting app.js');
-        _child_process2.default.exec('node --harmony examples/app.js --lark-restart', function (err, stdout, stderr) {
-            debug('Testing: app.js restarted!');
-            (0, _should2.default)(err).be.not.ok;
-            stdout.should.be.an.instanceOf(String);
-            stdout.should.be.exactly('[Lark-PM2] Restart OK\n');
-            debug('Testing: killing PM2 to clean');
-            _child_process2.default.execSync('./pm2.sh kill');
-            done();
-        });
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-restart');
+        debug('Testing: app.js restarted!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('[Lark-PM2] Restart OK\n');
+        debug('Testing: killing PM2 to clean');
+        _child_process2.default.execSync('./pm2.sh kill');
+        done();
     });
 
     it('should fail if restarting an none-existing app', function (done) {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: restarting app.js');
-        _child_process2.default.exec('node --harmony examples/app.js --lark-restart', function (err, stdout, stderr) {
-            debug('Testing: app.js restarted!');
-            (0, _should2.default)(err).be.not.ok;
-            stdout.should.be.an.instanceOf(String);
-            stdout.should.be.exactly('Error : process name not found\n[Lark-PM2] Restart Fail!\n');
-            debug('Testing: killing PM2 to clean');
-            _child_process2.default.execSync('./pm2.sh kill');
-            done();
-        });
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-restart');
+        debug('Testing: app.js restarted!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('Error : process name not found\n[Lark-PM2] Restart Fail!\n');
+        debug('Testing: killing PM2 to clean');
+        _child_process2.default.execSync('./pm2.sh kill');
+        done();
     });
 
     it('should be stopped if stopping an app', function (done) {
@@ -205,84 +197,69 @@ describe('bootstrap.start', function () {
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test stop');
         _child_process2.default.execSync('node --harmony examples/app.js');
-        _child_process2.default.exec('node --harmony examples/app.js --lark-stop', function (err, stdout, stderr) {
-            debug('Testing: app.js stopped!');
-            (0, _should2.default)(err).be.not.ok;
-            stdout.should.be.an.instanceOf(String);
-            stdout.should.be.exactly('[Lark-PM2] Stop OK\n');
-            debug('Testing: killing PM2 to clean');
-            _child_process2.default.execSync('./pm2.sh kill');
-            done();
-        });
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-stop');
+        debug('Testing: app.js stopped!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('[Lark-PM2] Stop OK\n');
+        debug('Testing: killing PM2 to clean');
+        _child_process2.default.execSync('./pm2.sh kill');
+        done();
     });
 
     it('should fail if stopping an none-existing app', function (done) {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: stopping app.js');
-        _child_process2.default.exec('node --harmony examples/app.js --lark-stop', function (err, stdout, stderr) {
-            debug('Testing: app.js restarted!');
-            (0, _should2.default)(err).be.not.ok;
-            stdout.should.be.an.instanceOf(String);
-            stdout.should.be.exactly('Error : process name not found\n[Lark-PM2] Stop Fail!\n');
-            debug('Testing: killing PM2 to clean');
-            _child_process2.default.execSync('./pm2.sh kill');
-            done();
-        });
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-stop');
+        debug('Testing: app.js restarted!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('Error : process name not found\n[Lark-PM2] Stop Fail!\n');
+        debug('Testing: killing PM2 to clean');
+        _child_process2.default.execSync('./pm2.sh kill');
+        done();
     });
 
     it('should be deleted if deleting an app', function (done) {
-        checkPm2(function (cb) {
-            debug('Testing: killing PM2 to prepare for test');
-            _child_process2.default.execSync('./pm2.sh kill');
-            debug('Testing: starting app.js for test delete');
-            _child_process2.default.execSync('node --harmony examples/app.js');
-            _child_process2.default.exec('node --harmony examples/app.js --lark-delete', function (err, stdout, stderr) {
-                debug('Testing: app.js stopped!');
-                (0, _should2.default)(err).be.not.ok;
-                stdout.should.be.an.instanceOf(String);
-                stdout.should.be.exactly('[Lark-PM2] Delete OK\n');
-                cb(done);
-            });
-        });
+        debug('Testing: killing PM2 to prepare for test');
+        _child_process2.default.execSync('./pm2.sh kill');
+        debug('Testing: starting app.js for test delete');
+        _child_process2.default.execSync('node --harmony examples/app.js');
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-delete');
+        debug('Testing: app.js stopped!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('[Lark-PM2] Delete OK\n');
+        done();
     });
 
     it('should kill PM2 if killing an app', function (done) {
-        checkPm2(function (cb) {
-            debug('Testing: killing PM2 to prepare for test');
-            _child_process2.default.execSync('./pm2.sh kill');
-            debug('Testing: starting app.js for test delete');
-            _child_process2.default.execSync('node --harmony examples/app.js');
-            _child_process2.default.exec('node --harmony examples/app.js --lark-kill', function (err, stdout, stderr) {
-                debug('Testing: app.js stopped!');
-                (0, _should2.default)(err).be.not.ok;
-                stdout.should.be.an.instanceOf(String);
-                stdout.should.be.exactly('');
-                cb(done);
-            });
-        });
+        debug('Testing: killing PM2 to prepare for test');
+        _child_process2.default.execSync('./pm2.sh kill');
+        debug('Testing: starting app.js for test delete');
+        _child_process2.default.execSync('node --harmony examples/app.js');
+        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-kill');
+        debug('Testing: app.js stopped!');
+        stdout.should.be.an.instanceOf(Buffer);
+        stdout.toString().should.be.exactly('');
+        done();
     });
 });
 
-function checkPm2(fn) {
+function checkPm2(fn, done) {
     var PM2_CHECK = true;
     debug('Testing: check if PM2 is running for other services');
-    _child_process2.default.exec('ps -elf | grep PM2 | grep -v grep', function (err, stdout, stderr) {
-        if (stdout) {
-            PM2_CHECK = false;
-        }
-        fn(function (done) {
-            if (!PM2_CHECK) {
-                debug('Testing: since PM2 is running for other services, will not check if PM2 is killed');
-                debug('Testing: You\'d better stop all PM2 and test agian');
-                return done();
-            }
-            debug('Testing: check if PM2 is killed');
-            _child_process2.default.exec('ps -elf | grep PM2 | grep -v grep', function (err, stdout, stderr) {
-                stdout.should.be.an.instanceOf(String);
-                stdout.should.be.exactly('');
-                done();
-            });
-        });
-    });
+    var stdout = _child_process2.default.execSync('ps -elf | grep PM2 | grep -v grep');
+    if (stdout.toString()) {
+        PM2_CHECK = false;
+    }
+    fn();
+    if (!PM2_CHECK) {
+        debug('Testing: since PM2 is running for other services, will not check if PM2 is killed');
+        debug('Testing: You\'d better stop all PM2 and test agian');
+        return done();
+    }
+    debug('Testing: check if PM2 is killed');
+    stdout = _child_process2.default.execSync('ps -elf | grep PM2 | grep -v grep');
+    stdout.should.be.an.instanceOf(Buffer);
+    stdout.toString().should.be.exactly('');
+    done();
 }
