@@ -15,7 +15,7 @@ const debug = _debug('lark-bootstrap');
 debug('Example: create new http app');
 const app = http.createServer((req, res) => {
     console.log(req.method + ' ' + req.url);
-    res.write("OK");
+    res.write("BOOTSTRAP SERVICE OK");
     res.end();
 });
 
@@ -43,14 +43,14 @@ if (process.argv.indexOf('cb') == -1) {
 }
 else {
     debug("Example: start in callback mode");
-    bootstrap.start_cb((e) => {
+    bootstrap.start().then(() => {
         debug('Example: bootstrap started');
-        if (e) {
-            console.log(e.stack);
-            process.exit(1);
-        }
         app.listen(3000, () => {
             debug('Example: app listening on 3000');
         });
+    })
+    .catch((e) => {
+        console.log(e.stack);
+        process.exit(1);
     });
 }
