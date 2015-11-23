@@ -34,8 +34,8 @@ bootstrap.configure = (config) => {
 /**
  * Bootstrap current service
  **/
-bootstrap.start = async () => {
-    debug('Bootstrap: start');
+bootstrap.async_start = async () => {
+    debug('Bootstrap: start in async function');
     bootstrap.configure();
     started = true;
     let state;
@@ -59,23 +59,21 @@ bootstrap.start = async () => {
 };
 
 /**
- * Bootstrap start with callback
+ * Bootstrap start, returning a promise
  **/
-bootstrap.start_cb = (cb) => {
-    debug('Bootstrap: start in callback mode');
-    if (!(cb instanceof Function)) {
-        debug('Bootstrap: callback function is not defined!');
-        cb = () => {};
-    }
-    (async () => {
-        try {
-            await bootstrap.start();
-        }
-        catch (e) {
-            return cb(e);
-        }
-        return cb();
-    })();
+bootstrap.start = () => {
+    debug('Bootstrap: start');
+    return new Promise((resolve, reject) => {
+        (async () => {
+            try {
+                await bootstrap.async_start();
+            }
+            catch (e) {
+                return reject(e);
+            }
+            return resolve();
+        })();
+    });
 };
 
 /**

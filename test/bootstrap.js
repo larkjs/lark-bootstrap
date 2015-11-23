@@ -49,11 +49,11 @@ describe('bootstrap', () => {
             .with.lengthOf(0);
         done();
     });
-    it('should have method start_cb', done => {
-        debug('Test: bootstrap method start_cb');
-        bootstrap.should.have.an.property('start_cb')
+    it('should have method async_start', done => {
+        debug('Test: bootstrap method async_start');
+        bootstrap.should.have.an.property('async_start')
             .which.is.an.instanceOf(Function)
-            .with.lengthOf(1);
+            .with.lengthOf(0);
         done();
     });
     it('should have method use', done => {

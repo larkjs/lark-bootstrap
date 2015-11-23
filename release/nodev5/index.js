@@ -54,8 +54,8 @@ bootstrap.configure = config => {
 /**
  * Bootstrap current service
  **/
-bootstrap.start = _asyncToGenerator(function* () {
-    debug('Bootstrap: start');
+bootstrap.async_start = _asyncToGenerator(function* () {
+    debug('Bootstrap: start in async function');
     bootstrap.configure();
     started = true;
     let state;
@@ -79,22 +79,20 @@ bootstrap.start = _asyncToGenerator(function* () {
 });
 
 /**
- * Bootstrap start with callback
+ * Bootstrap start, returning a promise
  **/
-bootstrap.start_cb = cb => {
-    debug('Bootstrap: start in callback mode');
-    if (!(cb instanceof Function)) {
-        debug('Bootstrap: callback function is not defined!');
-        cb = () => {};
-    }
-    _asyncToGenerator(function* () {
-        try {
-            yield bootstrap.start();
-        } catch (e) {
-            return cb(e);
-        }
-        return cb();
-    })();
+bootstrap.start = () => {
+    debug('Bootstrap: start');
+    return new Promise((resolve, reject) => {
+        _asyncToGenerator(function* () {
+            try {
+                yield bootstrap.async_start();
+            } catch (e) {
+                return reject(e);
+            }
+            return resolve();
+        })();
+    });
 };
 
 /**
