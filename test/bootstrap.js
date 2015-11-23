@@ -261,3 +261,4 @@ function checkPm2(fn, done) {
     stdout.toString().should.be.exactly('');
     done();
 }
+
