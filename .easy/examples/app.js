@@ -22,12 +22,12 @@ var _2 = _interopRequireDefault(_);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, "next"); var callThrow = step.bind(null, "throw"); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } step("next"); }); }; }
 
-const debug = (0, _debug3.default)('lark-bootstrap');
+var debug = (0, _debug3.default)('lark-bootstrap');
 
 debug('Example: create new http app');
-const app = _http2.default.createServer((req, res) => {
+var app = _http2.default.createServer(function (req, res) {
     console.log(req.method + ' ' + req.url);
     res.write("BOOTSTRAP SERVICE OK");
     res.end();
@@ -55,18 +55,18 @@ if (process.argv.indexOf('cb') == -1) {
             console.log(e.stack);
             process.exit(1);
         }
-        app.listen(3000, () => {
+        app.listen(3000, function () {
             debug('Example: app listening on 3000');
         });
     })();
 } else {
     debug("Example: start in callback mode");
-    _2.default.start().then(() => {
+    _2.default.start().then(function () {
         debug('Example: bootstrap started');
-        app.listen(3000, () => {
+        app.listen(3000, function () {
             debug('Example: app listening on 3000');
         });
-    }).catch(e => {
+    }).catch(function (e) {
         console.log(e.stack);
         process.exit(1);
     });

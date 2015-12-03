@@ -28,11 +28,11 @@ var _default2 = _interopRequireDefault(_default);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { var callNext = step.bind(null, "next"); var callThrow = step.bind(null, "throw"); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(callNext, callThrow); } } callNext(); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } step("next"); }); }; }
 
-const debug = (0, _debug3.default)('lark-bootstrap');
+var debug = (0, _debug3.default)('lark-bootstrap');
 
-const bootstrap = {
+var bootstrap = {
     config: _default2.default,
     hooks: []
 };
@@ -40,8 +40,8 @@ const bootstrap = {
 /**
  * Configure
  **/
-let started = false;
-bootstrap.configure = config => {
+var started = false;
+bootstrap.configure = function (config) {
     if (started) {
         throw new Error("Can not configure after bootstrap started!");
     }
@@ -58,22 +58,22 @@ bootstrap.async_start = _asyncToGenerator(function* () {
     debug('Bootstrap: start in async function');
     bootstrap.configure();
     started = true;
-    let state;
+    var state = undefined;
     if (bootstrap.config.pm && bootstrap.config.pm.enable !== false) {
         state = yield (0, _pm2.default)(bootstrap.config.pm);
     }
     if (state.isMaster) {
         process.exit(0);
     }
-    const ctx = {
+    var ctx = {
         bootstrap: bootstrap,
         config: (0, _extend2.default)(true, {}, bootstrap.config)
     };
     if (state) {
         ctx.state = (0, _extend2.default)(true, {}, state);
     }
-    for (let i = 0; i < bootstrap.hooks.length; i++) {
-        let fn = bootstrap.hooks[i];
+    for (var i = 0; i < bootstrap.hooks.length; i++) {
+        var fn = bootstrap.hooks[i];
         yield fn(ctx);
     }
 });
@@ -81,9 +81,9 @@ bootstrap.async_start = _asyncToGenerator(function* () {
 /**
  * Bootstrap start, returning a promise
  **/
-bootstrap.start = () => {
+bootstrap.start = function () {
     debug('Bootstrap: start');
-    return new Promise((resolve, reject) => {
+    return new Promise(function (resolve, reject) {
         _asyncToGenerator(function* () {
             try {
                 yield bootstrap.async_start();
@@ -98,7 +98,7 @@ bootstrap.start = () => {
 /**
  * Add hooks before booting
  **/
-bootstrap.use = fn => {
+bootstrap.use = function (fn) {
     debug('Bootstrap: use');
     if (!(fn instanceof Function)) {
         throw new Error('Param for Bootstrap.use must be a Function!');

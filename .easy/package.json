@@ -1,17 +1,15 @@
 {
     "name": "lark-bootstrap",
-    "version": "1.0.6",
+    "version": "2.0.0",
     "description": "bootstrap by PM2",
     "main": "index.js",
     "engines": {
-        "node": ">= 5.0.0"
+        "node": ">=0.11.0"
     },
     "directories": {
         "example": "examples"
     },
-    "scripts": {
-        "test": "NODE_ENV=testing ./node_modules/.bin/mocha --require should test/"
-    },
+    "scripts": "NODE_ENV=testing ./node_modules/.bin/mocha --harmony --require should test/",
     "repository": {
         "type": "git",
         "url": "https://github.com/larkjs/lark-bootstrap.git"
@@ -33,6 +31,7 @@
     "homepage": "https://github.com/larkjs/lark-bootstrap",
     "devDependencies": {
         "chalk": "^1.1.1",
+        "easy-babel": "^1.0.0",
         "mocha": "^2.3.3",
         "should": "^7.1.1"
     }
