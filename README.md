@@ -13,7 +13,7 @@ bootstrap lark by pm2
 $ npm install lark-bootstrap
 ```
 
-## usage
+## usage with async/await
 
 ```
 /**
@@ -41,7 +41,7 @@ Use `$ node app.js --lark-stop` `$ node app.js --lark-restart` `$ node app.js --
 
 `$ node app.js --lark-delete` `$ node app.js --lark-kill` to manage runing state.
 
-## Promise style
+## usage with Promise
 
 ```
 bootstrap.use(function () {
