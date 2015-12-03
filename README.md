@@ -41,7 +41,7 @@ Use `$ node app.js --lark-stop` `$ node app.js --lark-restart` `$ node app.js --
 
 `$ node app.js --lark-delete` `$ node app.js --lark-kill` to manage runing state.
 
-## ES5 style
+## Promise style
 
 ```
 bootstrap.use(function () {
@@ -51,7 +51,7 @@ bootstrap.use(function () {
     })
 });
 
-bootstrap.start_cb(function () {
+bootstrap.start().then(function () {
     //run your app
 });
 ```
