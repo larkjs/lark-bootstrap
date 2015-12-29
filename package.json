@@ -1,6 +1,6 @@
 {
     "name": "lark-bootstrap",
-    "version": "2.0.0-alpha",
+    "version": "2.0.0-alpha-1",
     "description": "bootstrap by PM2",
     "main": ".easy",
     "engines": {
