@@ -1,20 +1,18 @@
 'use strict';
 
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+const async = require('async');
+const extend = require('extend');
+const fs = require('fs');
+const path = require('path');
 
-var async = require('async');
-var extend = require('extend');
-var fs = require('fs');
-var path = require('path');
+const arg = require('./arg');
 
-var arg = require('./arg');
-
-var configPath = '../config';
+const configPath = '../config';
 
 module.exports = function (app, uconfig) {
-    if ((typeof uconfig === 'undefined' ? 'undefined' : _typeof(uconfig)) != 'object') throw new Error('Config must be an object');
-    var config = {};
-    var fileList = fs.readdirSync(path.join(__dirname, configPath)).filter(function (name) {
+    if (typeof uconfig != 'object') throw new Error('Config must be an object');
+    let config = {};
+    let fileList = fs.readdirSync(path.join(__dirname, configPath)).filter(function (name) {
         if (name[0] == '.') return false;
         return true;
     });
@@ -22,8 +20,8 @@ module.exports = function (app, uconfig) {
         config[path.basename(file, path.extname(file))] = require(path.join(__dirname, configPath, file));
     });
 
-    for (var key in config) {
-        if (uconfig[key] && _typeof(uconfig[key]) != 'object') return;else {
+    for (let key in config) {
+        if (uconfig[key] && typeof uconfig[key] != 'object') return;else {
             uconfig[key] = extend(config[key], uconfig[key]);
         }
     }

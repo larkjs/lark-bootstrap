@@ -4,7 +4,7 @@
     "description": "bootstrap by PM2",
     "main": ".easy",
     "engines": {
-        "node": ">=0.11.0"
+        "node": ">=4.0.0"
     },
     "directories": {
         "example": "examples"

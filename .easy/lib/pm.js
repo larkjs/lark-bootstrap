@@ -29,7 +29,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } step("next"); }); }; }
 
-var debug = (0, _debug3.default)('lark-bootstrap');
+const debug = (0, _debug3.default)('lark-bootstrap');
 
 /**
  * Set PM2 HOME
@@ -46,18 +46,18 @@ debug('PM: env PM2_HOME is set to ' + process.env.PM2_HOME);
  * So import it here
  **/
 //import PM2      from 'pm2';  // babel would move this line to the head of this script. use require to avoid it;
-var PM2 = require('pm2');
+const PM2 = require('pm2');
 
 /**
  * Used to record args/ctx/status of this app
  **/
-var app = {};
+const app = {};
 
 /**
  * Result to return, by default returns the info that
  * the current process is a worker process
  **/
-var state = {
+const state = {
     isMaster: false,
     isWorker: true
 };
@@ -103,13 +103,13 @@ function pm_init() {
     if (app.args.watch) {
         app.config.watch = true;
     }
-    var filename = process.mainModule.filename;
+    let filename = process.mainModule.filename;
     app.name = app.config.name || filename;
     app.root = _path2.default.dirname(filename);
     process.argv[1] = filename;
 };
 
-var run = (function () {
+let run = (function () {
     var ref = _asyncToGenerator(function* () {
         debug('PM: runing');
         // By default the current app is regard as a worker process
@@ -123,34 +123,43 @@ var run = (function () {
 
         // Run pm2 commands due to different args
         debug('PM: checking if none-start command');
-        var pm2args = ['delete', 'stop', 'reload', 'restart', 'gracefulreload', 'kill'];
-        for (var _iterator = pm2args, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-            var _ref;
+        let pm2args = ['delete', 'stop', 'reload', 'restart', 'gracefulreload', 'kill'];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-            if (_isArray) {
-                if (_i >= _iterator.length) break;
-                _ref = _iterator[_i++];
-            } else {
-                _i = _iterator.next();
-                if (_i.done) break;
-                _ref = _i.value;
+        try {
+            for (var _iterator = pm2args[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                let pm2arg = _step.value;
+
+                if (app.args[pm2arg]) {
+                    let name = pm2arg;
+                    debug('PM: checking result : ' + name);
+                    yield pm2[name]();
+                    return;
+                }
             }
-
-            var pm2arg = _ref;
-
-            if (app.args[pm2arg]) {
-                var name = pm2arg;
-                debug('PM: checking result : ' + name);
-                yield pm2[name]();
-                return;
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
             }
         }
+
         debug('PM: checking result : start or describe');
 
         // Run pm2 describe
         if (app.args.desc || app.args.describe) {
             debug('PM: describing service');
-            var list = yield pm2.describe();
+            let list = yield pm2.describe();
             console.log(list);
             return;
         }
@@ -174,10 +183,10 @@ var run = (function () {
  * kill PM2 Daemon
  **/
 
-var clean = (function () {
+let clean = (function () {
     var ref = _asyncToGenerator(function* () {
         debug('PM: clean');
-        var list = yield pm2.list();
+        let list = yield pm2.list();
         if (!list || !Array.isArray(list) || list.length <= 0) {
             debug("PM: no process is under PM2's management");
             yield pm2.kill();
@@ -196,12 +205,12 @@ var clean = (function () {
 /**
  * Offers pm2 actions
  **/
-var pm2 = {};
+const pm2 = {};
 
 pm2.connect = _asyncToGenerator(function* () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         debug('PM: pm2.connect');
-        PM2.connect(function (err) {
+        PM2.connect(err => {
             if (err) {
                 return reject(err);
             }
@@ -212,9 +221,9 @@ pm2.connect = _asyncToGenerator(function* () {
 });
 
 pm2.disconnect = _asyncToGenerator(function* () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         debug('PM: pm2.disconnect');
-        PM2.disconnect(function (err, result) {
+        PM2.disconnect((err, result) => {
             if (err) {
                 return reject(err);
             }
@@ -224,12 +233,12 @@ pm2.disconnect = _asyncToGenerator(function* () {
     });
 });
 
-var cmdWithMessage = ['start', 'restart', 'stop', 'delete', 'reload', 'gracefulReload'];
+const cmdWithMessage = ['start', 'restart', 'stop', 'delete', 'reload', 'gracefulReload'];
 pm2.command = (function () {
     var ref = _asyncToGenerator(function* (cmd, options) {
         debug('PM: pm2.command(' + cmd + ')');
-        var err = null;
-        var result = null;
+        let err = null;
+        let result = null;
         try {
             yield pm2.connect();
             result = yield pm2cmd(cmd, options);
@@ -241,7 +250,7 @@ pm2.command = (function () {
         // finish command by showing finish status
         if (cmdWithMessage.indexOf(cmd) >= 0) {
             debug('PM: pm2.command(' + cmd + ') displaying result status');
-            var cmd_to_display = cmd.toLowerCase();
+            let cmd_to_display = cmd.toLowerCase();
             cmd_to_display = cmd_to_display[0].toUpperCase() + cmd_to_display.slice(1);
             console.log('[Lark-PM2] ' + cmd_to_display + (!err ? ' OK' : ' Fail!'));
         } else {
@@ -271,18 +280,18 @@ pm2.command = (function () {
 /**
  * Call PM2 apis
  **/
-var cmdWithFileName = ['start', 'restart', 'stop', 'delete', 'reload', 'gracefulReload', 'describe'];
+const cmdWithFileName = ['start', 'restart', 'stop', 'delete', 'reload', 'gracefulReload', 'describe'];
 // only command start need options
 
-var pm2cmd = (function () {
+let pm2cmd = (function () {
     var ref = _asyncToGenerator(function* (cmd, options) {
         if (!(PM2[cmd] instanceof Function)) {
             throw new Error('PM2 does not have method ' + cmd);
         }
         debug('PM: pm2cmd ' + cmd);
 
-        var result = yield new Promise(function (resolve, reject) {
-            var cb = function cb(err, data) {
+        let result = yield new Promise((resolve, reject) => {
+            let cb = (err, data) => {
                 if (err) return reject(err);
                 return resolve(data);
             };
@@ -313,15 +322,15 @@ pm2.start = _asyncToGenerator(function* () {
     debug("PM: pm2.start (Compatibility Mode)");
 
     debug("PM: pm2.start, checking if service is runing");
-    var list = yield pm2.describe();
+    let list = yield pm2.describe();
     if (list && list.length > 0) {
         debug('PM: checking result : running');
         /**
          * Since restart do not reload args,
          * Starting an existing app with some new args should run delete & start
          **/
-        var node_args = list[0].pm2_env.node_args;
-        var args = list[0].pm2_env.args;
+        let node_args = list[0].pm2_env.node_args;
+        let args = list[0].pm2_env.args;
         if (!(node_args instanceof Object)) {
             node_args = JSON.parse(node_args);
         }
@@ -343,7 +352,7 @@ pm2.start = _asyncToGenerator(function* () {
 
 pm2._start = _asyncToGenerator(function* () {
     debug("PM: pm2.start (None Compatibility Mode)");
-    var options = {
+    let options = {
         name: app.name,
         output: _path2.default.join(app.root, app.config.outputLog || 'logs/log'),
         error: _path2.default.join(app.root, app.config.errorLog || app.config.outputLog || 'logs/log'),
@@ -358,7 +367,7 @@ pm2._start = _asyncToGenerator(function* () {
         debug('PM: pm2.start, watch mode enabled');
         options.watch = true;
         options.ignoreWatch = app.config.__file ? [app.config.__file] : [];
-        [app.config.outputLog, app.config.errorLog].forEach(function (filePath) {
+        [app.config.outputLog, app.config.errorLog].forEach(filePath => {
             //to dev @haohao
         });
     }

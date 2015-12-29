@@ -25,32 +25,13 @@ bootstrap.use(async (ctx) => {
 });
 
 debug('Example: start bootstrap');
-if (process.argv.indexOf('cb') == -1) {
-    debug("Example: start in async await mode");
-    (async () => {
-        try {
-            await bootstrap.start();
-            debug('Example: bootstrap started');
-        }
-        catch (e) {
-            console.log(e.stack);
-            process.exit(1);
-        }
-        app.listen(3000, () => {
-            debug('Example: app listening on 3000');
-        });
-    })();
-}
-else {
-    debug("Example: start in callback mode");
-    bootstrap.start().then(() => {
-        debug('Example: bootstrap started');
-        app.listen(3000, () => {
-            debug('Example: app listening on 3000');
-        });
-    })
-    .catch((e) => {
-        console.log(e.stack);
-        process.exit(1);
+bootstrap.start().then(() => {
+    debug('Example: bootstrap started');
+    app.listen(3000, () => {
+        debug('Example: app listening on 3000');
     });
-}
+})
+.catch((e) => {
+    console.log(e.stack);
+    process.exit(1);
+});

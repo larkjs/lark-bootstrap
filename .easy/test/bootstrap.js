@@ -25,17 +25,17 @@ var _default2 = _interopRequireDefault(_default);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var debug = (0, _debug3.default)('lark-bootstrap');
+const debug = (0, _debug3.default)('lark-bootstrap');
 
 _child_process2.default._exec = _child_process2.default.exec;
 _child_process2.default._execSync = _child_process2.default.execSync;
 
-_child_process2.default.exec = function (command, options, callback) {
+_child_process2.default.exec = (command, options, callback) => {
     command = 'DEBUG=NONE ' + command;
     return _child_process2.default._exec(command, options, callback);
 };
 
-_child_process2.default.execSync = function (command, options) {
+_child_process2.default.execSync = (command, options) => {
     command = 'DEBUG=NONE ' + command;
     return _child_process2.default._execSync(command, options);
 };
@@ -44,37 +44,37 @@ debug('Test: starting test lark-bootstrap');
 
 process.env.PM2_HOME = _path2.default.dirname(__dirname);
 debug('Test: set PM2 HOME to ' + process.env.PM2_HOME);
-process.on('exit', function () {
+process.on('exit', () => {
     if (process.env.PM2_HOME.match(/\.pm2\/?$/)) {
         debug('Test: removing .pm2 to clean');
         _child_process2.default.execSync('rm -rf ' + process.env.PM2_HOME);
     }
 });
 
-var bootstrap = require('..').default;
+const bootstrap = require('..').default;
 
-describe('bootstrap', function () {
-    it('should be a object', function (done) {
+describe('bootstrap', () => {
+    it('should be a object', done => {
         debug('Test: bootstrap');
         bootstrap.should.be.an.instanceOf(Object);
         done();
     });
-    it('should have method start', function (done) {
+    it('should have method start', done => {
         debug('Test: bootstrap method start');
         bootstrap.should.have.an.property('start').which.is.an.instanceOf(Function).with.lengthOf(0);
         done();
     });
-    it('should have method async_start', function (done) {
+    it('should have method async_start', done => {
         debug('Test: bootstrap method async_start');
         bootstrap.should.have.an.property('async_start').which.is.an.instanceOf(Function).with.lengthOf(0);
         done();
     });
-    it('should have method use', function (done) {
+    it('should have method use', done => {
         debug('Test: bootstrap method use');
         bootstrap.should.have.an.property('use').which.is.an.instanceOf(Function).with.lengthOf(1);
         done();
     });
-    it('should have property config as Default Config', function (done) {
+    it('should have property config as Default Config', done => {
         debug('Test: bootstrap property config');
         bootstrap.should.have.an.property('config').which.is.an.instanceOf(Object);
         Object.keys(bootstrap.config).length.should.be.exactly(Object.keys(_default2.default).length);
@@ -83,22 +83,22 @@ describe('bootstrap', function () {
         }
         done();
     });
-    it('should have property hooks as an empty array', function (done) {
+    it('should have property hooks as an empty array', done => {
         debug('Test: bootstrap property hooks');
         bootstrap.should.have.an.property('hooks').which.is.an.instanceOf(Array).with.lengthOf(0);
         done();
     });
 });
 
-var hook_handler_executed = false;
-var hook_handler = function hook_handler() {
+let hook_handler_executed = false;
+let hook_handler = () => {
     hook_handler_executed = true;
 };
 
-describe('bootstrap.use', function () {
-    it('should throw error if given argument is not a function', function (done) {
+describe('bootstrap.use', () => {
+    it('should throw error if given argument is not a function', done => {
         debug('Test: bootstrap.use(null)');
-        var error = undefined;
+        let error;
         try {
             bootstrap.use(null);
         } catch (e) {
@@ -107,7 +107,7 @@ describe('bootstrap.use', function () {
         error.should.be.an.instanceOf(Error);
         done();
     });
-    it('should add the handler into bootstrap.hooks', function (done) {
+    it('should add the handler into bootstrap.hooks', done => {
         debug('Test: bootstrap.use(hook_handler)');
         bootstrap.use(hook_handler);
         bootstrap.hooks.should.be.an.instanceOf(Array).with.lengthOf(1);
@@ -119,8 +119,8 @@ describe('bootstrap.use', function () {
     });
 });
 
-describe('bootstrap.configure', function () {
-    it('should set pm disabled by config', function (done) {
+describe('bootstrap.configure', () => {
+    it('should set pm disabled by config', done => {
         debug('Test: bootstrap.configure({ pm: { enable: false }})');
         bootstrap.configure({
             pm: { enable: false }
@@ -141,11 +141,11 @@ describe('bootstrap.start', function () {
     // starting and stopping pm2 would cost more than 2000ms
     console.log('    please wait patiently, this test costs some time since it starts and stops PM2 several times');
     this.timeout(60000);
-    it('should start the app if starting an app', function (done) {
+    it('should start the app if starting an app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js');
         debug('Testing: app.js started!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('[Lark-PM2] Start OK\n');
@@ -154,13 +154,13 @@ describe('bootstrap.start', function () {
         done();
     });
 
-    it('should restart if starting an existing app', function (done) {
+    it('should restart if starting an existing app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test restart');
         _child_process2.default.execSync('node --harmony examples/app.js');
         debug('Testing: restarting app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js');
         debug('Testing: app.js restarted!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('[Lark-PM2] Restart OK\n');
@@ -169,13 +169,13 @@ describe('bootstrap.start', function () {
         done();
     });
 
-    it('should restart if restarting an existing app', function (done) {
+    it('should restart if restarting an existing app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test restart');
         _child_process2.default.execSync('node --harmony examples/app.js');
         debug('Testing: restarting app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-restart');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-restart');
         debug('Testing: app.js restarted!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('[Lark-PM2] Restart OK\n');
@@ -184,11 +184,11 @@ describe('bootstrap.start', function () {
         done();
     });
 
-    it('should fail if restarting an none-existing app', function (done) {
+    it('should fail if restarting an none-existing app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: restarting app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-restart');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-restart');
         debug('Testing: app.js restarted!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('Error : process name not found\n[Lark-PM2] Restart Fail!\n');
@@ -197,12 +197,12 @@ describe('bootstrap.start', function () {
         done();
     });
 
-    it('should be stopped if stopping an app', function (done) {
+    it('should be stopped if stopping an app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test stop');
         _child_process2.default.execSync('node --harmony examples/app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-stop');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-stop');
         debug('Testing: app.js stopped!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('[Lark-PM2] Stop OK\n');
@@ -211,11 +211,11 @@ describe('bootstrap.start', function () {
         done();
     });
 
-    it('should fail if stopping an none-existing app', function (done) {
+    it('should fail if stopping an none-existing app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: stopping app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-stop');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-stop');
         debug('Testing: app.js restarted!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('Error : process name not found\n[Lark-PM2] Stop Fail!\n');
@@ -224,24 +224,24 @@ describe('bootstrap.start', function () {
         done();
     });
 
-    it('should be deleted if deleting an app', function (done) {
+    it('should be deleted if deleting an app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test delete');
         _child_process2.default.execSync('node --harmony examples/app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-delete');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-delete');
         debug('Testing: app.js stopped!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('[Lark-PM2] Delete OK\n');
         done();
     });
 
-    it('should kill PM2 if killing an app', function (done) {
+    it('should kill PM2 if killing an app', done => {
         debug('Testing: killing PM2 to prepare for test');
         _child_process2.default.execSync('./pm2.sh kill');
         debug('Testing: starting app.js for test delete');
         _child_process2.default.execSync('node --harmony examples/app.js');
-        var stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-kill');
+        let stdout = _child_process2.default.execSync('node --harmony examples/app.js --lark-kill');
         debug('Testing: app.js stopped!');
         stdout.should.be.an.instanceOf(Buffer);
         stdout.toString().should.be.exactly('');
@@ -250,9 +250,9 @@ describe('bootstrap.start', function () {
 });
 
 function checkPm2(fn, done) {
-    var PM2_CHECK = true;
+    let PM2_CHECK = true;
     debug('Testing: check if PM2 is running for other services');
-    var stdout = _child_process2.default.execSync('ps -elf | grep PM2 | grep -v grep');
+    let stdout = _child_process2.default.execSync('ps -elf | grep PM2 | grep -v grep');
     if (stdout.toString()) {
         PM2_CHECK = false;
     }
